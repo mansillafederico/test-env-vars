@@ -30,7 +30,7 @@ jobs:
         run: |
           env_vars=$(cat env.json | jq -r 'to_entries[] | "\(.key)=\(.value)"')
           echo "Setting environment variables:\n$env_vars"
-          echo "$env_vars" >> $GITHUB_ENV
+          echo "$env_vars" >> $GITHUB_VARS
 
       - name: Debug env vars
         run: |
