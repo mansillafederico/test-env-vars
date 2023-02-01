@@ -10,6 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Test Repo Vars
+        run: |
+          echo 'Vars: ${{ vars.REPO_VAR }}'
+
+      - name: Test Environment Vars
+        run: |
+          echo 'Vars: ${{ env.testing_env }}'
+
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -30,7 +38,7 @@ jobs:
         run: |
           env_vars=$(cat env.json | jq -r 'to_entries[] | "\(.key)=\(.value)"')
           echo "Setting environment variables:\n$env_vars"
-          echo "$env_vars" >> $GITHUB_VARS
+          echo "$env_vars" >> $GITHUB_VAR
 
       - name: Debug env vars
         run: |
@@ -41,6 +49,6 @@ jobs:
         run: |
           echo 'Version env variable: ${{ env.VERSION }}'
           
-      - name: Test Vars
+      - name: Test Repo Vars
         run: |
-          echo 'Vars: ${{ vars }}'
+          echo 'Vars: ${{ vars.REPO_VAR }}'
