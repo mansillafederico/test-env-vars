@@ -1,0 +1,28 @@
+name: Second - Use environment variable
+
+on: push
+
+env:
+  EXAMPLE_VAR: $EXAMPLE_VAR
+
+jobs:
+  use-env:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Display structure of downloaded files
+      run: ls -R
+      
+    - name: Check for completion token
+      uses: actions/download-artifact@v3
+      with:
+        name: completion-token
+
+    - name: Display structure of downloaded files
+      run: ls -R
+
+    - name: Print environment variable
+      run: echo "$EXAMPLE_VAR"
+      if: steps.check-for-completion-token.outputs.path

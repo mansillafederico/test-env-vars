@@ -2,53 +2,22 @@ name: Load Environment Variables from YAML file
 
 on: [ push ]
 
-env:
-  YAML_FILE: https://raw.githubusercontent.com/mansillafederico/test-env-vars/test-env-vars/env.json
-
 jobs:
+  call_node_workflow:
+    uses: ./.github/workflows/set_variables.yaml
+
   load_vars:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-      - name: Test Repo Vars
-        run: |
-          echo 'Vars: ${{ vars.REPO_VAR }}'
-
-      - name: Test Environment Vars
-        run: |
-          echo 'Vars: ${{ env.testing_env }}'
-
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
       - name: Install dependencies
         run: |
-          npm install -g yaml
-
-      - name: Load YAML file
-        run: |
-          curl --silent --location $YAML_FILE > env.json
-
-      - name: Set environment variables
-        run: |
-          env_vars=$(cat env.json | jq -r 'to_entries[] | "\(.key)=\(.value)"')
-          echo "Setting environment variables:\n$env_vars"
-          echo "$env_vars" >> $GITHUB_VAR
-
-      - name: Debug env vars
-        run: |
-          echo "Environment variables:"
-          printenv
-
-      - name: Test Environment Version variable
-        run: |
-          echo 'Version env variable: ${{ env.VERSION }}'
+          npm install -g yaml |
+          npm install @aml-org/als-server
           
-      - name: Test Repo Vars
+      - name: Check installed dependencies
         run: |
-          echo 'Vars: ${{ vars.REPO_VAR }}'
+          npm list

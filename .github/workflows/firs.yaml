@@ -1,0 +1,27 @@
+name: First - Set environment variable
+
+on: push
+
+env:
+  EXAMPLE_VAR: "Hello World"
+
+jobs:
+  set-env:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Set environment variable
+      uses: allenevans/set-env@v2.0.0
+      with:
+        EXAMPLE_VAR: ${{ env.EXAMPLE_VAR }}
+
+    - run: echo ${{ env }} > completion-token.txt
+
+    - name: Upload completion token
+      uses: actions/upload-artifact@v3
+      with:
+        name: completion-token
+        path: completion-token.txt
+
+    - name: Display structure of downloaded files
+      run: ls -R
