@@ -8,6 +8,7 @@ jobs:
 
   load_vars:
     runs-on: windows-latest
+    needs: [ call_node_workflow ]
 
     steps:
       - name: Checkout code
