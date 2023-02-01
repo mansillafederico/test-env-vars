@@ -1,0 +1,42 @@
+name: Load Environment Variables from YAML file
+
+on: [ push ]
+
+env:
+  YAML_FILE: https://raw.githubusercontent.com/mansillafederico/test-env-vars/test-env-vars/env.json
+
+jobs:
+  load_vars:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: |
+          npm install -g yaml
+
+      - name: Load YAML file
+        run: |
+          curl --silent --location $YAML_FILE > env.json
+
+      - name: Set environment variables
+        run: |
+          env_vars=$(cat env.json | jq -r 'to_entries[] | "\(.key)=\(.value)"')
+          echo "Setting environment variables:\n$env_vars"
+          echo "$env_vars" >> $GITHUB_ENV
+
+      - name: Debug env vars
+        run: |
+          echo "Environment variables:"
+          printenv
+
+      - name: Test Version variable
+        run: |
+          echo 'Version env variable: ${{ env.VERSION }}'
